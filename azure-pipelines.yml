@@ -10,6 +10,7 @@ variables:
   ARM_TENANT_ID: $(ARM_TENANT_ID)
   ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
 
+
 stages:
 - stage: Terraform
   jobs:
