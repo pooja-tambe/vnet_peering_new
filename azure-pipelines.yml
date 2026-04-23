@@ -2,7 +2,13 @@ trigger:
 - main
 
 pool:
-  name: Default   # your self-hosted agent pool name
+  name: Default
+
+variables:
+  ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+  ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+  ARM_TENANT_ID: $(ARM_TENANT_ID)
+  ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
 
 stages:
 - stage: Terraform
@@ -12,42 +18,21 @@ stages:
 
     - checkout: self
 
-    # Install Terraform (safe approach)
     - task: TerraformInstaller@1
       inputs:
         terraformVersion: '1.5.0'
 
-    # Verify tools (VERY IMPORTANT for self-hosted)
+    # Debug (temporary)
     - script: |
-        terraform -version
-      displayName: "Check Terraform Version"
+        echo CLIENT_ID=$(ARM_CLIENT_ID)
+        echo TENANT_ID=$(ARM_TENANT_ID)
+      displayName: "Debug Variables"
 
-    # Terraform Init
-    - script: |
-        terraform init
+    - script: terraform init
       displayName: "Terraform Init"
-      env:
-        ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-        ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-        ARM_TENANT_ID: $(ARM_TENANT_ID)
-        ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
 
-    # Terraform Plan
-    - script: |
-        terraform plan
+    - script: terraform plan
       displayName: "Terraform Plan"
-      env:
-        ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-        ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-        ARM_TENANT_ID: $(ARM_TENANT_ID)
-        ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
 
-    # Terraform Apply
-    - script: |
-        terraform apply -auto-approve
+    - script: terraform apply -auto-approve
       displayName: "Terraform Apply"
-      env:
-        ARM_CLIENT_ID: $(ARM_CLIENT_ID)
-        ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
-        ARM_TENANT_ID: $(ARM_TENANT_ID)
-        ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
