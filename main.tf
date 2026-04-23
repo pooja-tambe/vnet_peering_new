@@ -59,3 +59,10 @@ resource "azurerm_virtual_network_peering" "peering1" {
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
 }
+
+resource "azurerm_subnet" "subnet" {
+  name = "Mysubnet"
+  resource_group_name = azurerm_resource_group.rg.name
+  virtual_network_name = azurerm_virtual_network.vnet.name
+  address_prefixes = [ "10.0.0.0/24" ]
+}
