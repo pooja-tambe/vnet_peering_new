@@ -4,29 +4,63 @@ trigger:
 pool:
   name: Default
 
-# 👇 THIS IS MISSING IN YOUR CASE
 variables:
-- group: New variable group 23-Apr   # use your actual name
+- group: New variable group 23-Apr   # your variable group name
 
 stages:
+
+# =========================
+#  TERRAFORM STAGE
+# =========================
 - stage: Terraform
+  displayName: "Terraform CI/CD"
   jobs:
+
   - job: ApplyInfra
+    displayName: "Terraform Init Plan Apply"
     steps:
 
+    # Checkout code
     - checkout: self
 
+    # Install Terraform
     - task: TerraformInstaller@1
       inputs:
         terraformVersion: '1.5.0'
 
+    # Debug variables (optional)
     - script: |
-        echo CLIENT_ID=$(ARM_CLIENT_ID)
-        echo TENANT_ID=$(ARM_TENANT_ID)
+        echo "CLIENT_ID=$(ARM_CLIENT_ID)"
+        echo "TENANT_ID=$(ARM_TENANT_ID)"
       displayName: "DEBUG VARIABLES"
 
+    # =========================
+    # INIT
+    # =========================
     - script: terraform init
-      displayName: Terraform Init
+      displayName: "Terraform Init"
+      env:
+        ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+        ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+        ARM_TENANT_ID: $(ARM_TENANT_ID)
+        ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+
+    # =========================
+    # PLAN
+    # =========================
+    - script: terraform plan -out=tfplan
+      displayName: "Terraform Plan"
+      env:
+        ARM_CLIENT_ID: $(ARM_CLIENT_ID)
+        ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
+        ARM_TENANT_ID: $(ARM_TENANT_ID)
+        ARM_SUBSCRIPTION_ID: $(ARM_SUBSCRIPTION_ID)
+
+    # =========================
+    # APPLY
+    # =========================
+    - script: terraform apply -auto-approve tfplan
+      displayName: "Terraform Apply"
       env:
         ARM_CLIENT_ID: $(ARM_CLIENT_ID)
         ARM_CLIENT_SECRET: $(ARM_CLIENT_SECRET)
