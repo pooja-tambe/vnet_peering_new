@@ -111,7 +111,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
   network_interface_ids = [ azurerm_network_interface.nic.id ]
 
   os_disk {
-    caching = ReadWrite
+    caching = "ReadWrite"
     storage_account_type = "Standard_LRS"
   }
   source_image_reference {
