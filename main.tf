@@ -78,3 +78,24 @@ resource "azurerm_subnet" "subnetb1" {
   virtual_network_name = azurerm_virtual_network.vnet1.name
   address_prefixes = [ "20.0.1.0/24" ]
 }
+
+
+resource "azurerm_network_interface" "nic" {
+  name = "mynic"
+  resource_group_name = azurerm_resource_group.rg.name
+  location = azurerm_resource_group.rg.location
+
+  ip_configuration {
+    subnet_id = azurerm_subnet.subnet.id
+    name = "nicconfig"
+    private_ip_address_allocation = "Dynamic"
+    public_ip_address_id = azurerm_public_ip.pip.id
+  }
+}
+
+resource "azurerm_public_ip" "pip" {
+  name = "pipIP"
+  resource_group_name = azurerm_resource_group.rg.name
+  allocation_method = "static"
+  location = azurerm_resource_group.rg.location
+}
