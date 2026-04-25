@@ -7,7 +7,7 @@ provider "azurerm" {
 
 resource "azurerm_resource_group" "rg" {
   name     = "vnet-RG"
-  location = "eastus"
+  location = "centralus"
 }
 
 resource "azurerm_storage_account" "storage" {
