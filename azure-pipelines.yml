@@ -37,7 +37,7 @@ stages:
     # =========================
     # INIT
     # =========================
-    - script: terraform init
+    - script: terraform init -reconfigure -backend-config="storage_account_name=NEW_NAME"
       displayName: "Terraform Init"
       env:
         ARM_CLIENT_ID: $(ARM_CLIENT_ID)
