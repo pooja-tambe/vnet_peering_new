@@ -98,13 +98,14 @@ resource "azurerm_public_ip" "pip" {
   resource_group_name = azurerm_resource_group.rg.name
   allocation_method = "Static"
   location = azurerm_resource_group.rg.location
+  sku = "Standard"
 }
 
 resource "azurerm_linux_virtual_machine" "vm" {
   name = "agent-vm"
   resource_group_name = azurerm_resource_group.rg.name
   location = azurerm_resource_group.rg.location
-  size = "Standard_D4s_v3"
+  size = "Standard_B2"
   admin_username = "adminuser"
   admin_password = "password@2345!"
   disable_password_authentication = false
@@ -121,4 +122,3 @@ resource "azurerm_linux_virtual_machine" "vm" {
     version = "latest"
   }
 }
-
